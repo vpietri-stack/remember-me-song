@@ -1,4 +1,4 @@
-import { ASSET_MANIFEST } from "./asset-manifest.js?v=20261029-gh1";
+import { ASSET_MANIFEST } from "./asset-manifest.js?v=20261029-record1";
 
 export function createAssetStore(options={}) {
   const entries=options.entries||ASSET_MANIFEST.assets;

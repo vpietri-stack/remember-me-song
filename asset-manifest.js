@@ -1,5 +1,5 @@
 export const ASSET_MANIFEST = {
-  "version": "ae8852c9b3ba401f",
+  "version": "7244098af2d1291b",
   "assets": {
     "assets/audio/remember-me-full.mp3": {
       "bytes": 1293346,
@@ -180,6 +180,11 @@ export const ASSET_MANIFEST = {
       "bytes": 120638,
       "sha256": "19603fc48cc84daf8addc99eb1d23540d5480f1163c546195f4c5b2978317979",
       "type": "image/webp"
+    },
+    "assets/video/remember-me-karaoke.mp4": {
+      "bytes": 6737974,
+      "sha256": "01b43c254ea85f0cc298c7949ae70ec263ed314b583945a803e5ffada8f47a18",
+      "type": "video/mp4"
     }
   }
 };

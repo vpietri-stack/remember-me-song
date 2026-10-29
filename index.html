@@ -9,7 +9,8 @@
 <title>Remember me · Sing together</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css?v=20261029-gh1">
-<script type="module" src="app.js?v=20261029-gh1"></script>
+<link rel="stylesheet" href="practice.css?v=20261029-record1">
+<script type="module" src="app.js?v=20261029-record1"></script>
 </head>
 <body>
 <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -23,9 +24,10 @@
 </svg>
 <header class="site-header">
   <div class="header-inner"><a class="brand" href="./" aria-label="Remember me home"><span class="brand-symbol"><svg><use href="#music"/></svg></span><span>Remember me<small>LET'S SING TOGETHER</small></span></a>
-  <div class="header-actions"><button id="follow" class="small-button selected" aria-pressed="true" title="Keep the current picture in view during the whole song"><svg><use href="#follow-icon"/></svg><span>Follow song</span></button><button id="chinese" class="small-button" aria-pressed="false" lang="zh-CN">中文意思</button></div></div>
+  <div class="header-actions"><button id="chinese" class="small-button" aria-pressed="false" lang="zh-CN">中文意思</button></div></div>
 </header>
 <main>
+<div class="local-banner" lang="zh-CN">录音只保存在这台设备的此浏览器中，不会上传。</div>
 <section class="welcome">
   <div class="welcome-copy"><span class="eyebrow">A SONG TO KEEP IN YOUR HEART</span><h1>Look. Listen. Sing.</h1><div class="how-to"><p lang="zh-CN"><span class="cue-icon speech"><svg><use href="#speaker"/></svg></span><span>点<strong>图片</strong>，听老师读短语。</span></p><p lang="zh-CN"><span class="cue-icon singing"><svg><use href="#music"/></svg></span><span>点下面<strong>带音符的歌词</strong>，跟着唱。</span></p></div></div>
   <button id="full-song" class="full-song" lang="zh-CN"><span class="full-play"><svg id="full-icon"><use href="#play"/></svg></span><span class="full-copy"><small>准备好一起唱了吗？</small><strong id="full-label">听完整歌曲</strong></span><svg class="full-decoration"><use href="#music"/></svg></button>
@@ -33,6 +35,7 @@
 <div class="asset-prepare" id="asset-prepare"><span id="asset-status" role="status">正在准备图片和声音…</span><progress id="asset-progress" max="36" value="0" aria-label="图片和声音准备进度"></progress></div>
 <div id="notice" class="notice" role="alert" hidden></div>
 <section id="song-lines" class="song-lines" aria-label="Song picture cards"></section>
+<section class="practice-intro" lang="zh-CN" aria-label="整首歌录唱"><div><strong>现在，轮到你来唱！</strong><p>戴上耳机，看着视频里的小骷髅跟唱，录下整首歌。</p></div><button id="record-full" class="record-line">● 录整首歌</button></section>
 </main>
 <div class="player-dock">
   <div class="player-inner"><button id="toggle" class="player-toggle" aria-label="Play whole song"><svg><use href="#play"/></svg></button><div class="player-content"><div class="player-caption"><span id="player-kind">LET'S SING</span><strong id="player-text" aria-live="polite">Remember me</strong></div><div class="seek-row"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Recording position" disabled><span id="duration">1:05</span></div></div><button id="stop-button" class="stop-button" aria-label="Stop playback" title="Stop playback" disabled><svg><use href="#stop"/></svg></button></div>

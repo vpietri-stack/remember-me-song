@@ -1,13 +1,15 @@
 import { SONG } from "./song-data.js?v=20261029-gh1";
-import { Assets } from "./asset-cache.js?v=20261029-gh1";
+import { Assets } from "./asset-cache.js?v=20261029-record1";
+import { createPractice, KARAOKE_PATH } from "./practice.js?v=20261029-record1";
+import { createListeningPlayer } from "./listen.js?v=20261029-record1";
 const $=id=>document.getElementById(id);
 const icon=name=>'<svg aria-hidden="true"><use href="#'+name+'"/></svg>';
 const audio=$("audio"),cards=new Map(SONG.cards.map(c=>[c.id,c]));
-const state={mode:null,line:null,card:null,follow:true,chinese:false,token:0,active:null,lastManual:0,loading:false,intent:false,assetPath:null,originTried:false,recoveringToken:null};
+const state={mode:null,line:null,card:null,chinese:false,token:0,active:null,loading:false,intent:false,assetPath:null,originTried:false,recoveringToken:null};
 const lineElements=new Map(),pictureElements=[];
 function clock(s){s=Number.isFinite(s)?Math.max(0,s):0;return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");}
-function saveSettings(){try{localStorage.setItem("remember-me-student-settings",JSON.stringify({follow:state.follow,chinese:state.chinese}));}catch{}}
-try{const settings=JSON.parse(localStorage.getItem("remember-me-student-settings")||"{}");state.follow=settings.follow!==false;state.chinese=settings.chinese===true;}catch{}
+function saveSettings(){try{localStorage.setItem("remember-me-student-settings",JSON.stringify({chinese:state.chinese}));}catch{}}
+try{const settings=JSON.parse(localStorage.getItem("remember-me-student-settings")||"{}");state.chinese=settings.chinese===true;}catch{}
 function buildCards(){
  const container=$("song-lines");
  for(const line of SONG.lines){
@@ -48,7 +50,6 @@ function updateSettings(){
  document.body.classList.toggle("show-meanings",state.chinese);
  $("chinese").textContent=state.chinese?"隐藏中文":"中文意思";$("chinese").setAttribute("aria-pressed",String(state.chinese));
  $("chinese").classList.toggle("selected",state.chinese);
- $("follow").classList.toggle("selected",state.follow);$("follow").setAttribute("aria-pressed",String(state.follow));
 }
 function showError(){
  $("notice").textContent=state.chinese?"暂时无法播放。请检查网络后再点一次。":"This recording couldn't play. Check your connection, then tap it again.";
@@ -88,9 +89,6 @@ function updatePlayer(){
 function activateLine(index,scroll=false){
  if(state.active===index)return;
  state.active=index;updatePlayer();
- if(scroll&&state.follow&&Date.now()-state.lastManual>1800){
-  lineElements.get(index)?.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
- }
 }
 async function playSource(mode,index=null,cid=null){
  const token=++state.token;audio.pause();$("notice").hidden=true;
@@ -99,7 +97,6 @@ async function playSource(mode,index=null,cid=null){
  if(!src)return;
  state.mode=mode;state.line=index;state.card=cid;state.active=mode==="full"?1:index;state.loading=true;state.intent=true;state.assetPath=src;state.originTried=false;
  audio.src=Assets.url(src);audio.currentTime=0;audio.load();updatePlayer();
- if(mode==="full"&&state.follow)lineElements.get(1)?.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
  // Start play in the original tap event, before awaiting downloads, for iOS/WeChat.
  const playing=audio.play();
  Assets.getBlobUrl(src,{priority:true}).then(url=>{
@@ -129,11 +126,10 @@ async function recoverAudio(){
  }finally{if(state.recoveringToken===token)state.recoveringToken=null;}
 }
 function fullSong(){
- if(state.mode==="full"&&!audio.ended&&!audio.error){if(audio.paused)resume();else{state.intent=false;audio.pause();}}
- else playSource("full");
+ listening.open();
 }
 async function resume(){
- if(!state.mode){playSource("full");return;}
+ if(!state.mode){fullSong();return;}
  if(audio.error){playSource(state.mode,state.line,state.card);return;}
  if(audio.ended)audio.currentTime=0;
  state.intent=true;
@@ -148,7 +144,6 @@ $("full-song").addEventListener("click",fullSong);
 $("toggle").addEventListener("click",()=>{if(audio.paused)resume();else{state.intent=false;audio.pause();}});
 $("stop-button").addEventListener("click",stop);
 $("chinese").addEventListener("click",()=>{state.chinese=!state.chinese;updateSettings();saveSettings();});
-$("follow").addEventListener("click",()=>{state.follow=!state.follow;updateSettings();saveSettings();});
 $("seek").addEventListener("input",()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number($("seek").value)/1000*audio.duration;});
 audio.addEventListener("timeupdate",()=>{
  if(state.mode==="full"){
@@ -163,8 +158,8 @@ audio.addEventListener("error",()=>{if(state.mode&&audio.error)recoverAudio();})
 audio.addEventListener("ended",()=>{state.intent=false;});
 audio.addEventListener("waiting",()=>{state.loading=true;updatePlayer();});
 audio.addEventListener("playing",()=>{state.loading=false;updatePlayer();});
-document.addEventListener("wheel",()=>{state.lastManual=Date.now();},{passive:true});
-document.addEventListener("touchstart",()=>{state.lastManual=Date.now();},{passive:true});
+const listening=createListeningPlayer({SONG,Assets,onOpen:stop,showChinese:()=>state.chinese});
+const practice=createPractice({SONG,Assets,onOpen:()=>{stop();listening.stop();}});
 buildCards();updateSettings();updatePlayer();
 Assets.subscribe(({ready,total,failed,active,queued})=>{
  $("asset-progress").max=total;$("asset-progress").value=ready;
@@ -174,5 +169,5 @@ Assets.subscribe(({ready,total,failed,active,queued})=>{
 });
 Assets.prefetch([
  SONG.cards[0].image,SONG.cards[1].image,SONG.cards[0].spoken,SONG.lines[0].audio,SONG.fullSong.audio,
- ...SONG.cards.flatMap(card=>[card.image,card.spoken]),...SONG.lines.map(line=>line.audio)
+ ...SONG.cards.flatMap(card=>[card.image,card.spoken]),...SONG.lines.map(line=>line.audio),KARAOKE_PATH
 ]);

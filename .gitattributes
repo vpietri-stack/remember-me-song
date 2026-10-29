@@ -7,3 +7,4 @@
 *.json text eol=lf
 *.webp binary
 *.mp3 binary
+*.mp4 binary
