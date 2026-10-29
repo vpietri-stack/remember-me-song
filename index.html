@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7e9">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="description" content="Listen, look, and sing Remember Me. Tap each picture for your teacher's spoken phrase, or tap the lyric line to sing along.">
+<title>Remember me · Sing together</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css?v=20261029-gh1">
+<script type="module" src="app.js?v=20261029-gh1"></script>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<symbol id="music" viewBox="0 0 24 24"><path d="M9 18V5l12-3v13M9 9l12-3"/><ellipse cx="5.5" cy="18.5" rx="3.5" ry="2.5"/><ellipse cx="17.5" cy="15.5" rx="3.5" ry="2.5"/></symbol>
+<symbol id="speaker" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5zM15 8a6 6 0 010 8M18 4a11 11 0 010 16"/></symbol>
+<symbol id="play" viewBox="0 0 24 24"><path class="fill" d="m8 4 13 8-13 8z"/></symbol>
+<symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="4"/></symbol>
+<symbol id="stop" viewBox="0 0 24 24"><rect class="fill" x="5" y="5" width="14" height="14" rx="2"/></symbol>
+<symbol id="follow-icon" viewBox="0 0 24 24"><path d="M12 3v18m-4-4 4 4 4-4M4 8h3M17 8h3M4 13h3M17 13h3"/></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M20.5 4.5a5 5 0 00-7.1 0L12 6l-1.4-1.5a5 5 0 00-7.1 7.1L12 20l8.5-8.4a5 5 0 000-7.1z"/></symbol>
+</svg>
+<header class="site-header">
+  <div class="header-inner"><a class="brand" href="./" aria-label="Remember me home"><span class="brand-symbol"><svg><use href="#music"/></svg></span><span>Remember me<small>LET'S SING TOGETHER</small></span></a>
+  <div class="header-actions"><button id="follow" class="small-button selected" aria-pressed="true" title="Keep the current picture in view during the whole song"><svg><use href="#follow-icon"/></svg><span>Follow song</span></button><button id="chinese" class="small-button" aria-pressed="false" lang="zh-CN">中文意思</button></div></div>
+</header>
+<main>
+<section class="welcome">
+  <div class="welcome-copy"><span class="eyebrow">A SONG TO KEEP IN YOUR HEART</span><h1>Look. Listen. Sing.</h1><div class="how-to"><p lang="zh-CN"><span class="cue-icon speech"><svg><use href="#speaker"/></svg></span><span>点<strong>图片</strong>，听老师读短语。</span></p><p lang="zh-CN"><span class="cue-icon singing"><svg><use href="#music"/></svg></span><span>点下面<strong>带音符的歌词</strong>，跟着唱。</span></p></div></div>
+  <button id="full-song" class="full-song" lang="zh-CN"><span class="full-play"><svg id="full-icon"><use href="#play"/></svg></span><span class="full-copy"><small>准备好一起唱了吗？</small><strong id="full-label">听完整歌曲</strong></span><svg class="full-decoration"><use href="#music"/></svg></button>
+</section>
+<div class="asset-prepare" id="asset-prepare"><span id="asset-status" role="status">正在准备图片和声音…</span><progress id="asset-progress" max="36" value="0" aria-label="图片和声音准备进度"></progress></div>
+<div id="notice" class="notice" role="alert" hidden></div>
+<section id="song-lines" class="song-lines" aria-label="Song picture cards"></section>
+</main>
+<div class="player-dock">
+  <div class="player-inner"><button id="toggle" class="player-toggle" aria-label="Play whole song"><svg><use href="#play"/></svg></button><div class="player-content"><div class="player-caption"><span id="player-kind">LET'S SING</span><strong id="player-text" aria-live="polite">Remember me</strong></div><div class="seek-row"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Recording position" disabled><span id="duration">1:05</span></div></div><button id="stop-button" class="stop-button" aria-label="Stop playback" title="Stop playback" disabled><svg><use href="#stop"/></svg></button></div>
+</div>
+<audio id="audio" preload="none"></audio>
+</body>
+</html>
